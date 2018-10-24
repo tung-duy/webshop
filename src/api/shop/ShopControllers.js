@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 const { Categories, Products } = require("./ShopModel");
 const Op = Sequelize.Op;
+const fs = require("fs");
 
 module.exports = {
   //Categories
@@ -61,6 +62,30 @@ module.exports = {
     const image = req.file.filename;
     Products.create({ cat_id, name, description, price, image })
       .then(product => res.json(product))
+      .catch(err => console.log(err));
+  },
+  updateProduct: async (req, res) => {
+    const id = req.params.prod_id;
+    const product = await Products.findById(id).then(prod => prod);
+    const { cate_id, name, description, price } = req.body;
+    const { file } = req;
+    const updateProduct = { cate_id, name, description, price };
+    if (file != undefined) {
+      const filePath = `public/uploads/${product.image}`;
+      fs.unlinkSync(filePath);
+      Object.assign(
+        {},
+        updateProduct,
+        (updateProduct.image = req.file.filename)
+      );
+      product
+        .update(updateProduct)
+        .then(prod => res.json(prod))
+        .catch(err => console.log(err));
+    }
+    product
+      .update(updateProduct)
+      .then(prod => res.json(prod))
       .catch(err => console.log(err));
   }
 };

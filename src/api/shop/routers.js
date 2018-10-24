@@ -29,6 +29,11 @@ router.post(
   upload.single("image"),
   ShopControllers.addProduct
 );
-
+router.post(
+  "/prod/update/:prod_id",
+  passport.authenticate("jwt", { session: false }),
+  upload.single("image"),
+  ShopControllers.updateProduct
+);
 // @route       api/shop
 module.exports = router;
