@@ -6,7 +6,7 @@ const app = express();
 const config = require("./lib/config");
 
 const admins = require("./src/api/admin/routers");
-
+const shops = require("./src/api/shop/routers");
 // Setting body-parser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -23,6 +23,7 @@ app.get("/", function(req, res) {
 });
 
 app.use("/api/admin", admins);
+app.use("/api/shop", shops);
 
 const PORT = process.env.PORT || config.PORT;
 app.listen(PORT, () => {
