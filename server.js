@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const app = express();
 const config = require("./lib/config");
 
+const admins = require("./src/api/admin/routers");
+
 // Setting body-parser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -19,6 +21,8 @@ app.set("view engine", "ejs");
 app.get("/", function(req, res) {
   res.render("test");
 });
+
+app.use("/api/admin", admins);
 
 const PORT = process.env.PORT || config.PORT;
 app.listen(PORT, () => {
