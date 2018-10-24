@@ -4,6 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const config = require("./lib/config");
+const passport = require("passport");
 
 const admins = require("./src/api/admin/routers");
 const shops = require("./src/api/shop/routers");
@@ -21,6 +22,11 @@ app.set("view engine", "ejs");
 app.get("/", function(req, res) {
   res.render("test");
 });
+
+// Passport initialize
+app.use(passport.initialize());
+// Passport configure
+require("./lib/passport")(passport);
 
 app.use("/api/admin", admins);
 app.use("/api/shop", shops);
