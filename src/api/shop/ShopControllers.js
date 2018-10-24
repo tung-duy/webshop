@@ -35,5 +35,16 @@ module.exports = {
     cate.update({ name, description }).then(cate => {
       return res.json(cate);
     });
+  },
+  getListCate: async (req, res) => {
+    const errors = {};
+    Categories.findAll({ order: [["id", "DESC"]], offset: 1, limit: 3 }).then(
+      cates => {
+        if (!cates) {
+          errors.cate = "Category not found!";
+        }
+        res.json(cates);
+      }
+    );
   }
 };

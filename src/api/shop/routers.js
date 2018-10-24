@@ -13,5 +13,6 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   ShopControllers.updateCategory
 );
+router.get("/cate/list", ShopControllers.getListCate);
 // @route       api/shop
 module.exports = router;
