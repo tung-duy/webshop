@@ -58,9 +58,9 @@ module.exports = {
 
   // Products
   addProduct: (req, res) => {
-    const { cat_id, name, description, price } = req.body;
+    const { cate_id, name, description, price } = req.body;
     const image = req.file.filename;
-    Products.create({ cat_id, name, description, price, image })
+    Products.create({ cate_id, name, description, price, image })
       .then(product => res.json(product))
       .catch(err => console.log(err));
   },
@@ -87,5 +87,28 @@ module.exports = {
       .update(updateProduct)
       .then(prod => res.json(prod))
       .catch(err => console.log(err));
+  },
+  getListProducts: (req, res) => {
+    const errors = {};
+    Products.findAll()
+      .then(products => {
+        if (!products) {
+          errors.product = "Product not found!";
+          res.status(404).json(errors);
+        }
+        res.json(products);
+      })
+      .catch(err => console.log(err));
+  },
+  getProduct: (req, res) => {
+    const errors = {};
+    const id = req.params.prod_id;
+    Products.findById(id).then(prod => {
+      if (!prod) {
+        errors.product = "Product not found";
+        res.status(404).json(errors);
+      }
+      res.json(prod);
+    });
   }
 };

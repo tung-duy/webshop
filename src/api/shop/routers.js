@@ -35,5 +35,7 @@ router.post(
   upload.single("image"),
   ShopControllers.updateProduct
 );
+router.get("/prod/all", ShopControllers.getListProducts);
+router.get("/prod/:prod_id", ShopControllers.getProduct);
 // @route       api/shop
 module.exports = router;
