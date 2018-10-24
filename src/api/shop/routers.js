@@ -14,5 +14,10 @@ router.post(
   ShopControllers.updateCategory
 );
 router.get("/cate/list", ShopControllers.getListCate);
+router.delete(
+  "/cate/delete/:cate_id",
+  passport.authenticate("jwt", { session: false }),
+  ShopControllers.deleteCate
+);
 // @route       api/shop
 module.exports = router;

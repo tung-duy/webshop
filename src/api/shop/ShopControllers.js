@@ -46,5 +46,11 @@ module.exports = {
         res.json(cates);
       }
     );
+  },
+  deleteCate: (req, res) => {
+    const id = req.params.cate_id;
+    Categories.destroy({ where: { id } }).then(() => {
+      return res.json({ success: true });
+    });
   }
 };
