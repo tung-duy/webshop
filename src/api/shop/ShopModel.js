@@ -7,7 +7,7 @@ const Categories = sequelize.define("categories", {
 });
 
 const Products = sequelize.define("products", {
-  cat_id: Sequelize.INTEGER,
+  cate_id: Sequelize.INTEGER,
   name: Sequelize.STRING,
   description: Sequelize.TEXT,
   image: Sequelize.STRING,
@@ -17,7 +17,7 @@ const Products = sequelize.define("products", {
 Products.belongsTo(Categories, { foreignKey: "cate_id" });
 
 const start = async () => {
-  await sequelize.sync();
+  await sequelize.sync({ force: true });
 };
 // start();
 module.exports = {

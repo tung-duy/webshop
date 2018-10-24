@@ -1,8 +1,9 @@
 const Sequelize = require("sequelize");
-const { Categories } = require("./ShopModel");
+const { Categories, Products } = require("./ShopModel");
 const Op = Sequelize.Op;
 
 module.exports = {
+  //Categories
   addCategory: async (req, res) => {
     const errors = {};
     const { name, description } = req.body;
@@ -52,5 +53,14 @@ module.exports = {
     Categories.destroy({ where: { id } }).then(() => {
       return res.json({ success: true });
     });
+  },
+
+  // Products
+  addProduct: (req, res) => {
+    const { cat_id, name, description, price } = req.body;
+    const image = req.file.filename;
+    Products.create({ cat_id, name, description, price, image })
+      .then(product => res.json(product))
+      .catch(err => console.log(err));
   }
 };
