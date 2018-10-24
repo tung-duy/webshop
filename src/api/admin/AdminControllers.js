@@ -1,5 +1,7 @@
 const Admins = require("./AdminModel");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const key = require("../../../lib/config");
 
 module.exports = {
   register: async (req, res) => {
@@ -24,5 +26,35 @@ module.exports = {
         });
       });
     });
+  },
+  login: async (req, res) => {
+    const errors = {};
+    const { username, password } = req.body;
+    const user = await Admins.findOne({ where: { username } });
+    if (!user) {
+      errors.username = "Username not found";
+      return res.status(404).json(errors);
+    }
+    const checkPass = await bcrypt.compare(password, user.password);
+    if (!checkPass) {
+      errors.password = "Password incorrect!";
+      return res.status(400).json(errors);
+    } else {
+      const payload = {
+        id: user.id,
+        username: user.username
+      };
+      jwt.sign(
+        payload,
+        key.SecretOrKey,
+        { expiresIn: 60 * 60 },
+        (err, token) => {
+          res.json({
+            success: true,
+            token: "Bearer " + token
+          });
+        }
+      );
+    }
   }
 };
