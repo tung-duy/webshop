@@ -37,5 +37,12 @@ router.post(
 );
 router.get("/prod/all", ShopControllers.getListProducts);
 router.get("/prod/:prod_id", ShopControllers.getProduct);
+router.get("/prod/cate/:cate_id", ShopControllers.getProdByCate);
+router.delete(
+  "/prod/delete/:prod_id",
+  passport.authenticate("jwt", { session: false }),
+  ShopControllers.deleteProduct
+);
+
 // @route       api/shop
 module.exports = router;

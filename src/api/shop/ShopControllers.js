@@ -44,6 +44,7 @@ module.exports = {
       cates => {
         if (!cates) {
           errors.cate = "Category not found!";
+          res.status(404).json(errors);
         }
         res.json(cates);
       }
@@ -103,12 +104,45 @@ module.exports = {
   getProduct: (req, res) => {
     const errors = {};
     const id = req.params.prod_id;
-    Products.findById(id).then(prod => {
-      if (!prod) {
-        errors.product = "Product not found";
-        res.status(404).json(errors);
-      }
-      res.json(prod);
-    });
+    Products.findById(id)
+      .then(prod => {
+        if (!prod) {
+          errors.product = "Product not found";
+          res.status(404).json(errors);
+        } else {
+          return res.json(prod);
+        }
+      })
+      .catch(err => console.log(err));
+  },
+  getProdByCate: (req, res) => {
+    const errors = {};
+    const id = req.params.cate_id;
+    Products.findAll({ where: { cate_id: id } })
+      .then(products => {
+        if (products.length <= 0) {
+          errors.product = "Product not found!";
+          return res.status(404).json(errors);
+        }
+        res.json(products);
+      })
+      .catch(err => console.log(err));
+  },
+  deleteProduct: async (req, res) => {
+    const errors = {};
+    const id = req.params.prod_id;
+    const product = await Products.findById(id);
+    if (!product) {
+      errors.product = "Product not found";
+      return res.status(404).json(errors);
+    }
+    const filePath = `public/uploads/${product.image}`;
+    fs.unlink(filePath);
+    product
+      .destroy()
+      .then(() => {
+        return res.json({ success: "Delete success!" });
+      })
+      .catch(err => console.log(err));
   }
 };
