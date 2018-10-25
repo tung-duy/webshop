@@ -8,6 +8,8 @@ const passport = require("passport");
 
 const admins = require("./src/api/admin/routers");
 const shops = require("./src/api/shop/routers");
+const customers = require("./src/api/custom/routers");
+
 // Setting body-parser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -30,6 +32,7 @@ require("./lib/passport")(passport);
 
 app.use("/api/admin", admins);
 app.use("/api/shop", shops);
+app.use("/api/custom", customers);
 
 const PORT = process.env.PORT || config.PORT;
 app.listen(PORT, () => {
