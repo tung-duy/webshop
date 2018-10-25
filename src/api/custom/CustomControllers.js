@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const { Logins, Customers } = require("./CustomModel");
-const Admins = require("../admin/AdminModel");
+const { Admins } = require("../login/LoginModel");
 module.exports = {
   addUserCustom: async (req, res) => {
     const errors = {};
@@ -56,5 +56,6 @@ module.exports = {
         });
       });
     });
-  }
+  },
+  createOrder: (req, res) => {}
 };

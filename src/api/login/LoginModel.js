@@ -7,4 +7,4 @@ const Admins = sequelize.define("admins", {
 });
 
 // Admins.sync();
-module.exports = Admins;
+module.exports = { Admins };
