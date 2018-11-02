@@ -14,6 +14,7 @@ const Products = sequelize.define("products", {
   price: Sequelize.INTEGER
 });
 
+Categories.hasMany(Products, { onDelete: "cascade" });
 Products.belongsTo(Categories, { foreignKey: "cate_id" });
 
 const start = async () => {

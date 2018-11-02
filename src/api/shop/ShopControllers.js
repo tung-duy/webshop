@@ -9,15 +9,15 @@ module.exports = {
     const errors = {};
     if (req.user.isAdmin) {
       const { name, description } = req.body;
-      const cate = await Categories.findOne({ where: { name } });
-      if (cate) {
-        errors.cate = "Category already exists!";
-        return res.status(404).json(errors);
+      const category = await Categories.findOne({ where: { name } });
+      if (category) {
+        errors.category = "Category already exists!";
+        return res.status(400).json(errors);
       }
-      const newCate = { name, description };
-      Categories.create(newCate)
-        .then(cate => res.json(cate))
-        .catch(err => console.log(err));
+      const newCategory = { name, description };
+      Categories.create(newCategory)
+        .then(category => res.json(category))
+        .catch(err => res.json(err));
     } else {
       errors.user = "You do not have access";
       return res.status(403).json(errors);
@@ -36,11 +36,11 @@ module.exports = {
 
       if (isNameUnique) {
         errors.name = "Name already exists!";
-        return res.status(404).json(errors);
+        return res.status(400).json(errors);
       }
-      const cate = await Categories.findById(id);
-      cate.update({ name, description }).then(cate => {
-        return res.json(cate);
+      const category = await Categories.findById(id);
+      category.update({ name, description }).then(category => {
+        return res.json(category);
       });
     } else {
       errors.user = "You do not have access";
@@ -50,12 +50,12 @@ module.exports = {
   getListCate: async (req, res) => {
     const errors = {};
     Categories.findAll({ order: [["id", "DESC"]], offset: 1, limit: 3 }).then(
-      cates => {
-        if (!cates) {
-          errors.cate = "Category not found!";
-          res.status(404).json(errors);
+      categories => {
+        if (!categories) {
+          errors.category = "Category not found!";
+          res.status(400).json(errors);
         }
-        res.json(cates);
+        return res.json(categories);
       }
     );
   },
@@ -63,8 +63,21 @@ module.exports = {
     const errors = {};
     if (req.user.isAdmin) {
       const id = req.params.cate_id;
-      Categories.destroy({ where: { id } }).then(() => {
-        return res.json({ success: true });
+      Categories.findById(id).then(category => {
+        if (category == null) {
+          errors.category = "Category does not exists!";
+          return res.status(400).json(errors);
+        } else {
+          category
+            .destroy()
+            .then(() => {
+              return res.json({ success: true });
+            })
+            .catch(err => {
+              console.log(err);
+              return res.json(err);
+            });
+        }
       });
     } else {
       errors.user = "You do not have access";
@@ -80,7 +93,10 @@ module.exports = {
       const image = req.file.filename;
       Products.create({ cate_id, name, description, price, image })
         .then(product => res.json(product))
-        .catch(err => console.log(err));
+        .catch(err => {
+          console.log(err);
+          return res.json(err);
+        });
     } else {
       errors.user = "You do not have access";
       return res.status(403).json(errors);
@@ -105,12 +121,12 @@ module.exports = {
         product
           .update(updateProduct)
           .then(prod => res.json(prod))
-          .catch(err => console.log(err));
+          .catch(err => res.json(err));
       }
       product
         .update(updateProduct)
         .then(prod => res.json(prod))
-        .catch(err => console.log(err));
+        .catch(err => res.json(err));
     } else {
       errors.user = "You do not have access";
       return res.status(403).json(errors);
@@ -122,11 +138,14 @@ module.exports = {
       .then(products => {
         if (products.length <= 0) {
           errors.product = "Product not found!";
-          return res.status(404).json(errors);
+          return res.status(400).json(errors);
         }
-        res.json(products);
+        return res.json(products);
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        return res.json(err);
+      });
   },
   getProduct: (req, res) => {
     const errors = {};
@@ -135,12 +154,15 @@ module.exports = {
       .then(prod => {
         if (!prod) {
           errors.product = "Product not found";
-          res.status(404).json(errors);
+          return res.status(400).json(errors);
         } else {
           return res.json(prod);
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        return res.json(err);
+      });
   },
   getProdByCate: (req, res) => {
     const errors = {};
@@ -149,11 +171,14 @@ module.exports = {
       .then(products => {
         if (products.length <= 0) {
           errors.product = "Product not found!";
-          return res.status(404).json(errors);
+          return res.status(400).json(errors);
         }
-        res.json(products);
+        return res.json(products);
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        return res.json(err);
+      });
   },
   deleteProduct: async (req, res) => {
     const errors = {};
@@ -162,7 +187,7 @@ module.exports = {
       const product = await Products.findById(id);
       if (!product) {
         errors.product = "Product not found";
-        return res.status(404).json(errors);
+        return res.status(400).json(errors);
       }
       const filePath = `public/uploads/${product.image}`;
       fs.unlink(filePath);
@@ -171,7 +196,10 @@ module.exports = {
         .then(() => {
           return res.json({ success: "Delete success!" });
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          console.log(err);
+          return res.json(err);
+        });
     } else {
       errors.user = "You do not have access";
       return res.status(403).json(errors);

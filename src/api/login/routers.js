@@ -6,5 +6,5 @@ router.post("/register", LoginControllers.register);
 
 router.post("/", LoginControllers.login);
 
-//@route     api/admin
+//@route     api/login
 module.exports = router;

@@ -26,7 +26,7 @@ const Orders = sequelize.define("orders", {
   registered: Sequelize.STRING,
   delivery_add_id: Sequelize.INTEGER,
   payment_type: Sequelize.STRING,
-  data: Sequelize.DATE,
+  date: Sequelize.DATE,
   status: Sequelize.BOOLEAN,
   session: Sequelize.STRING,
   total: Sequelize.INTEGER
@@ -44,14 +44,16 @@ const Delivery_addresses = sequelize.define("delivery_addresses", {
   add3: { type: Sequelize.STRING, allowNull: true },
   postcode: { type: Sequelize.INTEGER, allowNull: true },
   phone: Sequelize.INTEGER,
-  email: Sequelize.INTEGER
+  email: Sequelize.STRING
 });
 
 Logins.belongsTo(Customers, { foreignKey: "customer_id" });
 Orders.belongsTo(Customers, { foreignKey: "customer_id" });
 Orders.belongsTo(Delivery_addresses, { foreignKey: "delivery_add_id" });
-Orders.belongsToMany(Products, { through: Order_items });
-Products.belongsToMany(Orders, { through: Order_items });
+Order_items.belongsTo(Products);
+Orders.hasMany(Order_items);
+// Orders.belongsToMany(Products, { through: Order_items });
+// Products.belongsToMany(Orders, { through: Order_items });
 
 const start = async () => {
   await sequelize.sync({ force: true });
@@ -61,5 +63,6 @@ module.exports = {
   Logins,
   Customers,
   Orders,
-  Delivery_addresses
+  Delivery_addresses,
+  Order_items
 };

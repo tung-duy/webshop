@@ -6,40 +6,40 @@ const upload = require("../../../lib/upload");
 
 // Router categories
 router.post(
-  "/cate/add",
+  "/categories/",
   passport.authenticate("jwt", { session: false }),
   ShopControllers.addCategory
 );
-router.post(
-  "/cate/update/:cate_id",
+router.put(
+  "/categories/:cate_id",
   passport.authenticate("jwt", { session: false }),
   ShopControllers.updateCategory
 );
-router.get("/cate/list", ShopControllers.getListCate);
+router.get("/categories/", ShopControllers.getListCate);
 router.delete(
-  "/cate/delete/:cate_id",
+  "/categories/:cate_id",
   passport.authenticate("jwt", { session: false }),
   ShopControllers.deleteCate
 );
 
 // Router products
 router.post(
-  "/prod/add",
+  "/products",
   passport.authenticate("jwt", { session: false }),
   upload.single("image"),
   ShopControllers.addProduct
 );
-router.post(
-  "/prod/update/:prod_id",
+router.put(
+  "/products/:prod_id",
   passport.authenticate("jwt", { session: false }),
   upload.single("image"),
   ShopControllers.updateProduct
 );
-router.get("/prod/all", ShopControllers.getListProducts);
-router.get("/prod/:prod_id", ShopControllers.getProduct);
-router.get("/prod/cate/:cate_id", ShopControllers.getProdByCate);
+router.get("/products", ShopControllers.getListProducts);
+router.get("/products/:prod_id", ShopControllers.getProduct);
+router.get("/products/category/:cate_id", ShopControllers.getProdByCate);
 router.delete(
-  "/prod/delete/:prod_id",
+  "/product/delete/:prod_id",
   passport.authenticate("jwt", { session: false }),
   ShopControllers.deleteProduct
 );
