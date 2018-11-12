@@ -7,7 +7,7 @@ const passport = require("passport");
 const logins = require("./src/api/login/routers");
 const shops = require("./src/api/shop/routers");
 const customers = require("./src/api/custom/routers");
-
+const sequelize = require("./lib/connect");
 const app = express();
 const PORT = config.PORT;
 

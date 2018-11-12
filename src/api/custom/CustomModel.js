@@ -23,7 +23,7 @@ const Customers = sequelize.define("customers", {
 
 const Orders = sequelize.define("orders", {
   customer_id: Sequelize.INTEGER,
-  registered: Sequelize.STRING,
+  registered: Sequelize.BOOLEAN,
   delivery_add_id: Sequelize.INTEGER,
   payment_type: Sequelize.STRING,
   date: Sequelize.DATE,

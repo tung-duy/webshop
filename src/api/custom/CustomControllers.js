@@ -1,4 +1,5 @@
 const bcrypt = require("bcryptjs");
+const passport = require("passport");
 const {
   Logins,
   Customers,
@@ -67,7 +68,17 @@ module.exports = {
       });
     });
   },
-  createOrder: async (req, res) => {
+  createOrder: async (req, res, next) => {
+    passport.authenticate("jwt", function(err, user, info) {
+      console.log(user);
+      var data = { hello: "world" };
+      // Only if the user authenticated properly do we include secret data.
+      if (user) {
+        data.secret = "3133753CR37";
+      }
+      return res.send(data);
+    })(req, res, next);
+
     const order = req.body;
     const newOrderItem = order.order_items;
     var total = 0;

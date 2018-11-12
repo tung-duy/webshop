@@ -1,0 +1,26 @@
+# docker-compose.yml
+version: "3"
+services:
+  app:
+    build: ./
+    depends_on:
+      - postgres
+    ports:
+      - "4000:4000"
+    environment:
+      SEQ_DB: webshop
+      SEQ_USER: postgres
+      SEQ_PW: tungduy
+      PORT: 4000
+      DATABASE_URL: postgres://postgres:tungduy@postgres:5433/webshop
+    networks:
+      - webnet
+  postgres:
+    image: postgres:9.6.8-alpine
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: webshop
+      POSTGRES_PASSWORD: tungduy
+    networks:
+      - webnet
